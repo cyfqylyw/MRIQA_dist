@@ -14,7 +14,7 @@ Code implementation for
 mkdir datasets
 ```
 
-### 1. Download [IXI dataset](https://brain-development.org/ixi-dataset/)
+### 1. Download [IXI](https://brain-development.org/ixi-dataset/) dataset
 
 ```
 wget http://biomedic.doc.ic.ac.uk/brain-development/downloads/IXI/IXI-T1.tar
@@ -25,7 +25,6 @@ tar -xvf IXI-T1.tar -C IXI-T1
 
 mkdir IXI-T2
 tar -xvf IXI-T1.tar -C IXI-T2
-
 ```
 
 
