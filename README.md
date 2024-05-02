@@ -2,19 +2,19 @@
 
 Code implementation for
 
-> 
+>  
 
 
 
 ## Dataset Preparation
 
-### 0. Change directory to `datasets` folder
+### Change directory to `datasets` folder
 
 ```
-mkdir datasets
+cd datasets
 ```
 
-### 1. Download [IXI](https://brain-development.org/ixi-dataset/) dataset
+### Download [IXI](https://brain-development.org/ixi-dataset/) dataset
 
 ```
 wget http://biomedic.doc.ic.ac.uk/brain-development/downloads/IXI/IXI-T1.tar
