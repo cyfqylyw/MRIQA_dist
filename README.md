@@ -27,7 +27,15 @@ mkdir IXI-T2
 tar -xvf IXI-T1.tar -C IXI-T2
 ```
 
+### Download [ABIDE](http://preprocessed-connectomes-project.org/abide/) dataset
 
+```
+curl -O -L https://raw.githubusercontent.com/preprocessed-connectomes-project/abide/master/download_abide_preproc.py
+
+mkdir ABIDE
+
+python download_abide_preproc.py -d reho -p cpac -s nofilt_noglobal -o ./ABIDE
+```
 
 
 
