@@ -35,6 +35,8 @@ curl -O -L https://raw.githubusercontent.com/preprocessed-connectomes-project/ab
 mkdir ABIDE
 
 python download_abide_preproc.py -d reho -p cpac -s nofilt_noglobal -o ./ABIDE
+
+python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
 ```
 
 
