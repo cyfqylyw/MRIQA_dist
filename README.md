@@ -40,7 +40,13 @@ python download_abide_preproc.py -d reho -p dparsf -s nofilt_noglobal -o ./ABIDE
 python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
 ```
 
+### Download [OASIS](https://sites.wustl.edu/oasisbrains/home/oasis-1/) dataset
 
+```
+cd OASIS
+chmod +x download_oasis.sh
+./download_oasis.sh
+```
 
 
 
