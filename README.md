@@ -48,6 +48,28 @@ tar -xvf NFBS_BEaST_Library.tar
 ```
 
 
+### Download [QTAB](https://openneuro.org/datasets/ds004146/versions/1.0.4) dataset
+
+Download using [AWS CLI](https://aws.amazon.com/cli/):
+
+```
+mkdir QTAB
+cd QTAB
+aws s3 sync --no-sign-request s3://openneuro.org/ds004146 ds004146-download/
+```
+
+
+### Download [ARC](https://openneuro.org/datasets/ds004884/versions/1.0.1/download) dataset
+
+Download using [AWS CLI](https://aws.amazon.com/cli/):
+
+```
+mkdir ARC
+cd ARC
+aws s3 sync --no-sign-request s3://openneuro.org/ds004884 ds004884-download/
+```
+
+
 ### Download [preprocessed ABIDE](http://preprocessed-connectomes-project.org/abide/) dataset
 
 ```
@@ -65,15 +87,18 @@ python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
 ## Overview of datasets
 
 | Dataset | Year | # Subject | # Image | format | shape |
-| --- | --- | --- | --- | --- | --- |
+| :---: | :---: | :---: | :---: | :---: | :---: |
 | IXI (T1w) | 2008 | 581 | 581 | .nii.gz | (256, 256, 130-150) |
 | IXI (T2w) | 2008 | 581 | 581 | .nii.gz | (256, 256, 140-150) |
 | OASIS-1 | 2007 | 416 | 1688 | .img | (256, 256, 128, 1) |
 | NFBS | 2011 | 125 | 125 | .mnc |  (193, 229, 193)  |
+| QTAB | 2022 | 422 |  | .nii.gz |  |
+| ARC | 2023 | 230 |  | .nii.gz |  |
 | preprocessed ABIDE (ccs) | 2013 | 884 | 884 | .nii.gz | (61, 73, 61) |
 | preprocessed ABIDE (cpac) | 2013 | 884 | 884 | .nii.gz | (61, 73, 61) |
 | preprocessed ABIDE (dparsf) | 2013 | 884 | 884 | .nii.gz | (61, 73, 61) |
 | preprocessed ABIDE (niak) | 2013 | 884 | 884 | .nii.gz | (61, 73, 61) |
+
 
 
 
