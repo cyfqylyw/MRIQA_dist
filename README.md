@@ -48,7 +48,14 @@ chmod +x download_oasis.sh
 ./download_oasis.sh
 ```
 
+### Download [NFBS](http://preprocessed-connectomes-project.org/NFB_skullstripped/index.html) dataset
 
+```
+mkdir NFBS
+cd NFBS
+wget https://fcp-indi.s3.amazonaws.com/data/Projects/RocklandSample/NFBS_BEaST_Library.tar
+tar -xvf NFBS_BEaST_Library.tar
+```
 
 
 
