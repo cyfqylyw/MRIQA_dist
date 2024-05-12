@@ -6,26 +6,12 @@ Code implementation for
 
 
 
-## Dataset Preparation
+## Datasets Preparation
 
 ### Change directory to `datasets` folder
 
 ```
 cd datasets
-```
-
-
-### Download [IXI](https://brain-development.org/ixi-dataset/) dataset
-
-```
-wget http://biomedic.doc.ic.ac.uk/brain-development/downloads/IXI/IXI-T1.tar
-wget http://biomedic.doc.ic.ac.uk/brain-development/downloads/IXI/IXI-T2.tar
-
-mkdir IXI-T1
-tar -xvf IXI-T1.tar -C IXI-T1
-
-mkdir IXI-T2
-tar -xvf IXI-T1.tar -C IXI-T2
 ```
 
 
@@ -48,9 +34,21 @@ tar -xvf NFBS_BEaST_Library.tar
 ```
 
 
-### Download [QTAB](https://openneuro.org/datasets/ds004146/versions/1.0.4) dataset
+### Download [IXI](https://brain-development.org/ixi-dataset/) dataset
 
-Download using [AWS CLI](https://aws.amazon.com/cli/):
+```
+wget http://biomedic.doc.ic.ac.uk/brain-development/downloads/IXI/IXI-T1.tar
+wget http://biomedic.doc.ic.ac.uk/brain-development/downloads/IXI/IXI-T2.tar
+
+mkdir IXI-T1
+tar -xvf IXI-T1.tar -C IXI-T1
+
+mkdir IXI-T2
+tar -xvf IXI-T2.tar -C IXI-T2
+```
+
+
+### Download [QTAB](https://openneuro.org/datasets/ds004146/versions/1.0.4) dataset using [AWS CLI](https://aws.amazon.com/cli/)
 
 ```
 mkdir QTAB
@@ -59,9 +57,7 @@ aws s3 sync --no-sign-request s3://openneuro.org/ds004146 ds004146-download/
 ```
 
 
-### Download [ARC](https://openneuro.org/datasets/ds004884/versions/1.0.1/download) dataset
-
-Download using [AWS CLI](https://aws.amazon.com/cli/):
+### Download [ARC](https://openneuro.org/datasets/ds004884/versions/1.0.1) dataset using [AWS CLI](https://aws.amazon.com/cli/)
 
 ```
 mkdir ARC
@@ -84,22 +80,40 @@ python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
 ```
 
 
-## Overview of datasets
+## Distortion generation
 
-| Dataset | Year | # Subject | # Image | format | shape |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| IXI (T1w) | 2008 | 581 | 581 | .nii.gz | (256, 256, 130-150) |
-| IXI (T2w) | 2008 | 581 | 581 | .nii.gz | (256, 256, 140-150) |
-| OASIS-1 | 2007 | 416 | 1688 | .img | (256, 256, 128, 1) |
-| NFBS | 2011 | 125 | 125 | .mnc |  (193, 229, 193)  |
-| QTAB | 2022 | 422 |  | .nii.gz |  |
-| ARC | 2023 | 230 |  | .nii.gz |  |
-| preprocessed ABIDE (ccs) | 2013 | 884 | 884 | .nii.gz | (61, 73, 61) |
-| preprocessed ABIDE (cpac) | 2013 | 884 | 884 | .nii.gz | (61, 73, 61) |
-| preprocessed ABIDE (dparsf) | 2013 | 884 | 884 | .nii.gz | (61, 73, 61) |
-| preprocessed ABIDE (niak) | 2013 | 884 | 884 | .nii.gz | (61, 73, 61) |
+Generate  distortion with [TorchIO](https://torchio.readthedocs.io) library.
+
+```
+python transform.py
+
+python distortion.py
+```
 
 
+
+## Overview of the datasets
+
+| Dataset | Year | # Subjects | # Images | # Samples | Format | Shape |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| OASIS | 2007 | 416 | 1688 | 50640 | .img | (256, 256, 128, 1) |
+| NFBS | 2011 | 125 | 125 | 3750 | .mnc |  (193, 229, 193)  |
+| IXI (T1w) | 2008 | 581 | 581 | 17430 | .nii.gz | (256, 256, 130-150) |
+| IXI (T2w) | 2008 | 578 | 578 | 17250 | .nii.gz | (256, 256, 120-150) |
+| QTAB (T1w) | 2022 | 417 | 1441 | 43230 | .nii.gz | (176-208, 300, 320) |
+| QTAB (T2w) | 2022 | 417 | 1821 | 54630 | .nii.gz | (768, 768, 50-60) |
+| ARC (T1w) | 2023 | 230 | 447 | 13320 | .nii.gz | (160-192, 256, 256) |
+| ARC (T2w) | 2023 | 230 | 441 | 13110 | .nii.gz | (160-192, 256, 256) |
+| preprocessed ABIDE (ccs) | 2013 | 884 | 884 | 26520 | .nii.gz | (61, 73, 61) |
+| preprocessed ABIDE (cpac) | 2013 | 884 | 884 | 26520 | .nii.gz | (61, 73, 61) |
+| preprocessed ABIDE (dparsf) | 2013 | 884 | 884 | 26520 | .nii.gz | (61, 73, 61) |
+| preprocessed ABIDE (niak) | 2013 | 884 | 884 | 26520 | .nii.gz | (61, 73, 61) |
+
+
+*Notes:*
+- \# Subjects: Number of research subjects or participants.
+- \# Images: Number of MR images obtained for each study.
+- \# Samples: Number of MR images after distortion processing
 
 
 ## Usage
