@@ -152,20 +152,7 @@ dics = [
     "./datasets/src/ABIDE_ccs/",
     "./datasets/src/ABIDE_cpac/",
     "./datasets/src/ABIDE_dparsf/",
-    "./datasets/src/ABIDE_niak/",
-    "./datasets/dist/",
-    "./datasets/dist/OASIS_T1w/",
-    "./datasets/dist/NFBS_T1w/",
-    "./datasets/dist/IXI_T1w/",
-    "./datasets/dist/IXI_T2w/",
-    "./datasets/dist/QTAB_T1w/",
-    "./datasets/dist/QTAB_T2w/",
-    "./datasets/dist/ARC_T1w/",
-    "./datasets/dist/ARC_T2w/",
-    "./datasets/dist/ABIDE_ccs/",
-    "./datasets/dist/ABIDE_cpac/",
-    "./datasets/dist/ABIDE_dparsf/",
-    "./datasets/dist/ABIDE_niak/"
+    "./datasets/src/ABIDE_niak/"
 ]
 
 for dic in dics:
