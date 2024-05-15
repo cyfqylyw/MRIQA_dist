@@ -82,12 +82,17 @@ python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
 
 ## Distortion generation
 
-Generate  distortion with [TorchIO](https://torchio.readthedocs.io) library.
+Generate distortion with [TorchIO](https://torchio.readthedocs.io) library. Distortion inlcudes: 
 
 ```
 python transform.py
 
-python distortion.py
+python distortion.py --dist motion
+python distortion.py --dist ghosting
+python distortion.py --dist spike
+python distortion.py --dist bias
+python distortion.py --dist noise
+python distortion.py --dist blur
 ```
 
 
@@ -98,16 +103,16 @@ python distortion.py
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | OASIS | 2007 | 416 | 1688 | 50640 | .img | (256, 256, 128, 1) |
 | NFBS | 2011 | 125 | 125 | 3750 | .mnc |  (193, 229, 193)  |
-| IXI (T1w) | 2008 | 581 | 581 | 17430 | .nii.gz | (256, 256, 130-150) |
-| IXI (T2w) | 2008 | 578 | 578 | 17250 | .nii.gz | (256, 256, 120-150) |
-| QTAB (T1w) | 2022 | 417 | 1441 | 43230 | .nii.gz | (176-208, 300, 320) |
-| QTAB (T2w) | 2022 | 417 | 1821 | 54630 | .nii.gz | (768, 768, 50-60) |
-| ARC (T1w) | 2023 | 230 | 447 | 13320 | .nii.gz | (160-192, 256, 256) |
-| ARC (T2w) | 2023 | 230 | 441 | 13110 | .nii.gz | (160-192, 256, 256) |
-| preprocessed ABIDE (ccs) | 2013 | 884 | 884 | 26520 | .nii.gz | (61, 73, 61) |
-| preprocessed ABIDE (cpac) | 2013 | 884 | 884 | 26520 | .nii.gz | (61, 73, 61) |
-| preprocessed ABIDE (dparsf) | 2013 | 884 | 884 | 26520 | .nii.gz | (61, 73, 61) |
-| preprocessed ABIDE (niak) | 2013 | 884 | 884 | 26520 | .nii.gz | (61, 73, 61) |
+| IXI (T1w) | 2008 | 581 | 581 | 14525 | .nii.gz | (256, 256, 130-150) |
+| IXI (T2w) | 2008 | 578 | 578 | 14375 | .nii.gz | (256, 256, 120-150) |
+| QTAB (T1w) | 2022 | 417 | 1441 | 36025 | .nii.gz | (176-208, 300, 320) |
+| QTAB (T2w) | 2022 | 417 | 1821 | 45525 | .nii.gz | (768, 768, 50-60) |
+| ARC (T1w) | 2023 | 230 | 447 | 11100 | .nii.gz | (160-192, 256, 256) |
+| ARC (T2w) | 2023 | 230 | 441 | 10925 | .nii.gz | (160-192, 256, 256) |
+| preprocessed ABIDE (ccs) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
+| preprocessed ABIDE (cpac) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
+| preprocessed ABIDE (dparsf) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
+| preprocessed ABIDE (niak) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
 
 
 *Notes:*
