@@ -91,7 +91,7 @@ def random_ghosting_distortion(ds_type_combinations):
                 os.mkdir(os.path.join(dataset_path_dist, level))
 
         count = 0
-        for filename in path_list[24:]:
+        for filename in path_list:
             data = np.load(os.path.join(dataset_path_src, filename))
             data = data.reshape(1, *data.shape)
 
@@ -127,7 +127,7 @@ def random_spike_distortion(ds_type_combinations):
                 os.mkdir(os.path.join(dataset_path_dist, level))
 
         count = 0
-        for filename in path_list[30:]:
+        for filename in path_list:
             data = np.load(os.path.join(dataset_path_src, filename))
             data = data.reshape(1, *data.shape)
 
@@ -140,16 +140,75 @@ def random_spike_distortion(ds_type_combinations):
                 np.save(os.path.join(dataset_path_dist, level, filename), data_dist)
 
 
-def random_bias_field_distortion(ds_type_combinations):
-    pass
-
-
 def random_noise_distortion(ds_type_combinations):
-    pass
+    print('coming into function: random_noise_distortion')
+    # add random noise artifacts
+    for ds_name, sub_type in ds_type_combinations:
+        print(ds_name, sub_type)
+
+        dataset_path_src = f"./datasets/src/{ds_name}_{sub_type}/"
+        dataset_path_dist = f"./datasets/dist/{ds_name}_{sub_type}/"
+        path_list = os.listdir(dataset_path_src)
+        path_list.sort()
+
+        
+        means = [0.1, 0.4, 0.8, 10]
+        stds = [100.0, 400.0, 800.0, 3000.0]
+        
+        levels = ['noise_1', 'noise_2', 'noise_3', 'noise_4']
+
+        for level in levels:
+            if not os.path.exists(os.path.join(dataset_path_dist, level)):
+                os.mkdir(os.path.join(dataset_path_dist, level))
+
+        count = 0
+        for filename in path_list:
+            data = np.load(os.path.join(dataset_path_src, filename))
+            data = data.reshape(1, *data.shape)
+
+            count += 1
+            if count % 10 == 0:
+                print('\t', ds_name, sub_type, count)
+
+            for mean, std, level in zip(means, stds, levels):
+                data_dist = np.array(RandomNoise(mean=0, std=(std, std+0.1))(data))[0, :, :, :]
+                np.save(os.path.join(dataset_path_dist, level, filename), data_dist)
 
 
 def random_blur_distortion(ds_type_combinations):
-    pass
+    print('coming into function: random_blur_distortion')
+    # add random blur artifacts
+    for ds_name, sub_type in ds_type_combinations:
+        print(ds_name, sub_type)
+
+        dataset_path_src = f"./datasets/src/{ds_name}_{sub_type}/"
+        dataset_path_dist = f"./datasets/dist/{ds_name}_{sub_type}/"
+        path_list = os.listdir(dataset_path_src)
+        path_list.sort()
+
+        stds = [0.8, 1.2, 2.5, 5]
+        
+        levels = ['blur_1', 'blur_2', 'blur_3', 'blur_4']
+
+        for level in levels:
+            if not os.path.exists(os.path.join(dataset_path_dist, level)):
+                os.mkdir(os.path.join(dataset_path_dist, level))
+
+        count = 0
+        for filename in path_list:
+            data = np.load(os.path.join(dataset_path_src, filename))
+            plt.imshow(data[:, :, data.shape[-1] // 2], cmap='gray')
+            plt.show()
+
+            data = data.reshape(1, *data.shape)
+
+            count += 1
+            if count % 10 == 0:
+                print('\t', ds_name, sub_type, count)
+
+            for std, level in zip(stds, levels):
+                data_dist = np.array(RandomBlur(std=(std, std+0.1, std, std+0.1, std, std+0.1))(data))[0, :, :, :]
+                np.save(os.path.join(dataset_path_dist, level, filename), data_dist)
 
 
 if __name__ == "__main__":
@@ -170,14 +229,9 @@ if __name__ == "__main__":
         random_ghosting_distortion(ds_type_combinations)
     elif args.dist == 'spike':
         random_spike_distortion(ds_type_combinations)
-    elif args.dist == 'bias':
-        random_bias_field_distortion(ds_type_combinations)
     elif args.dist == 'noise':
         random_noise_distortion(ds_type_combinations)
     elif args.dist == 'blur':
         random_blur_distortion(ds_type_combinations)
     else:
-        raise ValueError(f"The argument dist ({args.dist}) should be one of ['motion', 'ghosting', 'spike', 'bias', 'noise', 'blur'].")
-
-
-# nohup python -u distortion.py --dist spike >> spike.log 2>&1 &
+        raise ValueError(f"The argument dist ({args.dist}) should be one of ['motion', 'ghosting', 'spike', 'noise', 'blur'].")
