@@ -1,0 +1,6 @@
+matplotlib==3.8.3
+nibabel==5.2.1
+numpy==1.26.4
+scikit_learn==1.4.2
+torch==2.0.0
+torchio==0.19.1
