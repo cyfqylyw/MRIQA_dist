@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from utils import *
 import torch
 from torch.utils.data import Dataset, DataLoader
 from sklearn.model_selection import KFold
@@ -20,7 +21,7 @@ class MRIDataset(Dataset):
             for filename in os.listdir(category_dir):
                 filepath = os.path.join(category_dir, filename)
                 self.filepaths.append(filepath)
-                self.labels.append(category_name)
+                self.labels.append(all_labels.index(category_name))
         
         if self.index_list is not None:
             self.filepaths = [self.filepaths[idx] for idx in self.index_list]
@@ -46,7 +47,7 @@ class FourierTransform(object):
         if ds_name == "NFBS_T1w":
             mri_data = np.transpose(mri_data, (0, 2, 1))  # From (193, 229, 193) to (193, 193, 229)
         elif ds_name in ["QTAB_T1w", "ARC_T1w", "ARC_T2w"]:
-            mri_data = np.transpose(mri_data, (1, 2, 0))  # From (176, 300, 320) to (300, 320, 176)
+            mri_data = np.transpose(mri_data, (1, 2, 0))
 
         # Downsample to (128, 128, height)
         zoom_factors = (128 / mri_data.shape[0], 128 / mri_data.shape[1], 1)
@@ -83,36 +84,35 @@ def seed_everything(seed=42):
     torch.backends.cudnn.deterministic = True
 
 
-# Example usage:
-seed_everything()
-ds_name="NFBS_T1w"
-root_dir = 'datasets/dist/NFBS_T1w/'
-batch_size = 32
-num_workers = 4
-transform = FourierTransform()
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# # Example usage:
+# seed_everything()
+# ds_name="NFBS_T1w"
+# root_dir = 'datasets/dist/NFBS_T1w/'
+# batch_size = 32
+# num_workers = 4
+# transform = FourierTransform()
+# device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-data_loaders = get_data_loaders(root_dir, ds_name, batch_size, num_workers, transform=transform, device=device)
+# data_loaders = get_data_loaders(root_dir, ds_name, batch_size, num_workers, transform=transform, device=device)
 
-# Iterate through 10 fold data loaders
-for fold_idx, fold_data in enumerate(data_loaders):
-    print(f"Fold {fold_idx + 1}:")
-    train_loader = fold_data['train']
-    test_loader = fold_data['test']
+# # Iterate through 10 fold data loaders
+# for fold_idx, fold_data in enumerate(data_loaders):
+#     print(f"Fold {fold_idx + 1}:")
+#     train_loader = fold_data['train']
+#     test_loader = fold_data['test']
     
-    # Output sample counts and class counts for train_loader
-    print("Train samples:", len(train_loader.dataset))
+#     # Output sample counts and class counts for train_loader
+#     print("Train samples:", len(train_loader.dataset))
     
-    # Output sample counts and class counts for val_loader
-    print("Test samples:", len(test_loader.dataset))
+#     # Output sample counts and class counts for val_loader
+#     print("Test samples:", len(test_loader.dataset))
 
-    for data, labels in train_loader:
-        print(data[0].shape, data[1].shape, labels)
-        break  # Only process the first batch for debugging purposes
+#     for data, labels in train_loader:
+#         print(data[0].shape, data[1].shape, labels)
+#         break  # Only process the first batch for debugging purposes
 
-    for data, labels in test_loader:
-        print(data[0].shape, data[1].shape, labels)
-        break  # Only process the first batch for debugging purposes
+#     for data, labels in test_loader:
+#         print(data[0].shape, data[1].shape, labels)
+#         break  # Only process the first batch for debugging purposes
 
-    print("\n")
-    
+#     print("\n")
