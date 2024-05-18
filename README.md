@@ -84,7 +84,7 @@ python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
 
 ## Distortion generation
 
-Generate distortion with [TorchIO](https://torchio.readthedocs.io) library. Distortion inlcudes: 
+Generate five types of distortion and four levels for each with [TorchIO](https://torchio.readthedocs.io) library.
 
 ```
 python transform.py
@@ -110,10 +110,10 @@ python distortion.py --dist blur
 | QTAB (T2w) | 2022 | 417 | 1821 | 45525 | .nii.gz | (768, 768, 50-60) |
 | ARC (T1w) | 2023 | 230 | 447 | 11100 | .nii.gz | (160-192, 256, 256) |
 | ARC (T2w) | 2023 | 230 | 441 | 10925 | .nii.gz | (160-192, 256, 256) |
-| ABIDE (ccs) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
+<!-- | ABIDE (ccs) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
 | ABIDE (cpac) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
 | ABIDE (dparsf) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
-| ABIDE (niak) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
+| ABIDE (niak) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) | -->
 
 
 *Notes:*
