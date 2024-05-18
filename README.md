@@ -124,7 +124,15 @@ python distortion.py --dist blur
 
 ## Usage
 
+Initialize the python environment.
 
+```
+git clone https://github.com/cyfqylyw/MRIQA_dist.git
+cd MRIQA_dist
+conda create -n mriqa python=3.9
+conda activate mriqa
+pip install -r requirements.txt
+```
 
 
 
