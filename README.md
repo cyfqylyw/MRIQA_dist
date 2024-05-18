@@ -66,6 +66,7 @@ aws s3 sync --no-sign-request s3://openneuro.org/ds004884 ds004884-download/
 ```
 
 
+<!-- 
 ### Download [preprocessed ABIDE](http://preprocessed-connectomes-project.org/abide/) dataset
 
 ```
@@ -77,7 +78,8 @@ python download_abide_preproc.py -d reho -p ccs -s nofilt_noglobal -o ./ABIDE
 python download_abide_preproc.py -d reho -p cpac -s nofilt_noglobal -o ./ABIDE
 python download_abide_preproc.py -d reho -p dparsf -s nofilt_noglobal -o ./ABIDE
 python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
-```
+``` 
+-->
 
 
 ## Distortion generation
@@ -90,7 +92,6 @@ python transform.py
 python distortion.py --dist motion
 python distortion.py --dist ghosting
 python distortion.py --dist spike
-python distortion.py --dist bias
 python distortion.py --dist noise
 python distortion.py --dist blur
 ```
@@ -101,18 +102,18 @@ python distortion.py --dist blur
 
 | Dataset | Year | # Subjects | # Images | # Samples | Format | Shape |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| OASIS | 2007 | 416 | 1688 | 35448 | .img | (256, 256, 128, 1) |
-| NFBS | 2011 | 125 | 125 | 2625 | .mnc |  (193, 229, 193)  |
-| IXI (T1w) | 2008 | 581 | 581 | 12201 | .nii.gz | (256, 256, 130-150) |
-| IXI (T2w) | 2008 | 578 | 578 | 12075 | .nii.gz | (256, 256, 120-150) |
-| QTAB (T1w) | 2022 | 417 | 1441 | 30261 | .nii.gz | (176-208, 300, 320) |
-| QTAB (T2w) | 2022 | 417 | 1821 | 38241 | .nii.gz | (768, 768, 50-60) |
-| ARC (T1w) | 2023 | 230 | 447 | 9324 | .nii.gz | (160-192, 256, 256) |
-| ARC (T2w) | 2023 | 230 | 441 | 9177 | .nii.gz | (160-192, 256, 256) |
-<!-- | ABIDE (ccs) | 2013 | 884 | 884 | 18564 | .nii.gz | (61, 73, 61) |
-| ABIDE (cpac) | 2013 | 884 | 884 | 18564 | .nii.gz | (61, 73, 61) |
-| ABIDE (dparsf) | 2013 | 884 | 884 | 18564 | .nii.gz | (61, 73, 61) |
-| ABIDE (niak) | 2013 | 884 | 884 | 18564 | .nii.gz | (61, 73, 61) | -->
+| OASIS | 2007 | 416 | 1688 | 50640 | .img | (256, 256, 128, 1) |
+| NFBS | 2011 | 125 | 125 | 3750 | .mnc |  (193, 229, 193)  |
+| IXI (T1w) | 2008 | 581 | 581 | 14525 | .nii.gz | (256, 256, 130-150) |
+| IXI (T2w) | 2008 | 578 | 578 | 14375 | .nii.gz | (256, 256, 120-150) |
+| QTAB (T1w) | 2022 | 417 | 1441 | 36025 | .nii.gz | (176-208, 300, 320) |
+| QTAB (T2w) | 2022 | 417 | 1821 | 45525 | .nii.gz | (768, 768, 50-60) |
+| ARC (T1w) | 2023 | 230 | 447 | 11100 | .nii.gz | (160-192, 256, 256) |
+| ARC (T2w) | 2023 | 230 | 441 | 10925 | .nii.gz | (160-192, 256, 256) |
+| ABIDE (ccs) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
+| ABIDE (cpac) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
+| ABIDE (dparsf) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
+| ABIDE (niak) | 2013 | 884 | 884 | 22100 | .nii.gz | (61, 73, 61) |
 
 
 *Notes:*
@@ -123,21 +124,13 @@ python distortion.py --dist blur
 
 ## Usage
 
-Initialize the python environment.
-
-```
-git clone https://github.com/cyfqylyw/MRIQA_dist.git
-cd MRIQA_dist
-conda create -n mriqa python=3.9
-conda activate mriqa
-pip install -r requirements.txt
-```
 
 
 
-<!-- ## Citation
 
-TBD -->
+## Citation
+
+TBD
 
 
 
