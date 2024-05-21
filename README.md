@@ -5,17 +5,31 @@ Code implementation for
 >  
 
 
+# Usage
 
-## Datasets Preparation
+## 1. Initialize python environment.
 
-### Change directory to `datasets` folder
+```
+git clone https://github.com/cyfqylyw/MRIQA_dist.git
+cd MRIQA_dist
+conda create -n mriqa python=3.9
+conda activate mriqa
+pip install -r requirements.txt
+```
+
+
+
+
+## 2. Datasets preparation
+
+### 2.0. Change directory to `datasets` folder
 
 ```
 cd datasets
 ```
 
 
-### Download [OASIS](https://sites.wustl.edu/oasisbrains/home/oasis-1/) dataset
+### 2.1. Download [OASIS](https://sites.wustl.edu/oasisbrains/home/oasis-1/) dataset
 
 ```
 cd OASIS
@@ -24,7 +38,7 @@ chmod +x download_oasis.sh
 ```
 
 
-### Download [NFBS](http://preprocessed-connectomes-project.org/NFB_skullstripped/index.html) dataset
+### 2.2. Download [NFBS](http://preprocessed-connectomes-project.org/NFB_skullstripped/index.html) dataset
 
 ```
 mkdir NFBS
@@ -34,7 +48,7 @@ tar -xvf NFBS_BEaST_Library.tar
 ```
 
 
-### Download [IXI](https://brain-development.org/ixi-dataset/) dataset
+### 2.3. Download [IXI](https://brain-development.org/ixi-dataset/) dataset
 
 ```
 wget http://biomedic.doc.ic.ac.uk/brain-development/downloads/IXI/IXI-T1.tar
@@ -48,7 +62,7 @@ tar -xvf IXI-T2.tar -C IXI-T2
 ```
 
 
-### Download [QTAB](https://openneuro.org/datasets/ds004146/versions/1.0.4) dataset using [AWS CLI](https://aws.amazon.com/cli/)
+### 2.4. Download [QTAB](https://openneuro.org/datasets/ds004146/versions/1.0.4) dataset using [AWS CLI](https://aws.amazon.com/cli/)
 
 ```
 mkdir QTAB
@@ -57,7 +71,7 @@ aws s3 sync --no-sign-request s3://openneuro.org/ds004146 ds004146-download/
 ```
 
 
-### Download [ARC](https://openneuro.org/datasets/ds004884/versions/1.0.1) dataset using [AWS CLI](https://aws.amazon.com/cli/)
+### 2.5. Download [ARC](https://openneuro.org/datasets/ds004884/versions/1.0.1) dataset using [AWS CLI](https://aws.amazon.com/cli/)
 
 ```
 mkdir ARC
@@ -66,8 +80,7 @@ aws s3 sync --no-sign-request s3://openneuro.org/ds004884 ds004884-download/
 ```
 
 
-<!-- 
-### Download [preprocessed ABIDE](http://preprocessed-connectomes-project.org/abide/) dataset
+<!-- ### 2.6. Download [preprocessed ABIDE](http://preprocessed-connectomes-project.org/abide/) dataset
 
 ```
 curl -O -L https://raw.githubusercontent.com/preprocessed-connectomes-project/abide/master/download_abide_preproc.py
@@ -78,11 +91,11 @@ python download_abide_preproc.py -d reho -p ccs -s nofilt_noglobal -o ./ABIDE
 python download_abide_preproc.py -d reho -p cpac -s nofilt_noglobal -o ./ABIDE
 python download_abide_preproc.py -d reho -p dparsf -s nofilt_noglobal -o ./ABIDE
 python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
-``` 
--->
+```  -->
 
 
-## Distortion generation
+
+## 3. Distortion generation
 
 Generate five types of distortion and four levels for each with [TorchIO](https://torchio.readthedocs.io) library.
 
@@ -98,7 +111,7 @@ python distortion.py --dist blur
 
 
 
-## Overview of the datasets
+### Overview of the datasets
 
 | Dataset | Year | # Subjects | # Images | # Samples | Format | Shape |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -122,21 +135,11 @@ python distortion.py --dist blur
 - \# Samples: Number of MR images after distortion processing
 
 
-## Usage
-
-Initialize the python environment.
-
-```
-git clone https://github.com/cyfqylyw/MRIQA_dist.git
-cd MRIQA_dist
-conda create -n mriqa python=3.9
-conda activate mriqa
-pip install -r requirements.txt
-```
+## 4. Model training and evaluation
 
 
 
-## Citation
+# Citation
 
 TBD
 
