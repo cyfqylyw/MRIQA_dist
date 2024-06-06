@@ -1,6 +1,6 @@
-# MRIQA_dist
+# HSFNet
 
-Code implementation for
+Code implementations for
 
 >  MRI Quality Assessment via Enhanced Mamba: A Hybrid Spatial-Frequency Approach
 
@@ -10,8 +10,8 @@ Code implementation for
 ## 1. Initialize python environment.
 
 ```
-git clone https://github.com/cyfqylyw/MRIQA_dist.git
-cd MRIQA_dist
+git clone https://github.com/cyfqylyw/HSFNet.git
+cd HSFNet
 conda create -n mriqa python=3.9
 conda activate mriqa
 pip install -r requirements.txt
