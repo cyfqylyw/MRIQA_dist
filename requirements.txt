@@ -1,6 +1,10 @@
-matplotlib==3.8.3
 nibabel==5.2.1
 numpy==1.26.4
 scikit_learn==1.4.2
 torch==2.0.0
+torchvision==0.15.1
 torchio==0.19.1
+causal-conv1d==1.2.0.post2
+mamba-ssm==1.2.0.post1
+vit-pytorch==1.6.9
+timm==0.4.12

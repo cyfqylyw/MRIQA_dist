@@ -2,7 +2,7 @@
 
 Code implementation for
 
->  
+>  MRI Quality Assessment via Enhanced Mamba: A Hybrid Spatial-Frequency Approach
 
 
 # Usage
@@ -136,6 +136,12 @@ python distortion.py --dist blur
 
 
 ## 4. Model training and evaluation
+
+For `HSFNet` training, evluation and model saving, run command
+
+```
+python main.py --ds_name NFBS_T1w --dist_type all --model_name HSFNet --batch_size 32 --num_workers 8 --num_epochs 20 --start_epoch 0 --lr 0.001 --num_classes 21 --sample_length 30 --last_dim 128 --cuda_id 0
+```
 
 
 
