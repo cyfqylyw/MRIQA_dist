@@ -8,7 +8,7 @@ from scipy.ndimage import zoom
 
 
 class MRIDataset(Dataset):
-    def __init__(self, root_dir, ds_name, dist_type, index_list=None, sample_length=10, threshold=10000):
+    def __init__(self, root_dir, ds_name, dist_type, index_list=None, sample_length=10):
         self.root_dir = root_dir
         self.ds_name = ds_name
         self.index_list = index_list
@@ -45,9 +45,6 @@ class MRIDataset(Dataset):
         if self.index_list is not None:
             self.filepaths = [self.filepaths[idx] for idx in self.index_list]
             self.labels = [self.labels[idx] for idx in self.index_list]
-    
-        if len(self.filepaths) > threshold:
-            _, self.filepaths, _, self.labels = train_test_split(self.filepaths, self.labels, test_size=threshold/len(self.filepaths), random_state=42)
 
     def __len__(self):
         return len(self.filepaths)
@@ -81,14 +78,14 @@ class MRIDataset(Dataset):
         return data, label
 
 
-def get_data_loaders(root_dir, ds_name, dist_type, batch_size, num_workers, sample_length, threshold=10000, k_fold_splits=5):
+def get_data_loaders(root_dir, ds_name, dist_type, batch_size, num_workers, sample_length, k_fold_splits=5):
     dataset = MRIDataset(root_dir, ds_name, dist_type)
     kf = KFold(n_splits=k_fold_splits, shuffle=True)
     data_loaders = []
 
     for train_index, test_index in kf.split(dataset):
-        train_dataset = MRIDataset(root_dir, ds_name, dist_type, index_list=train_index, sample_length=sample_length, threshold=threshold)
-        test_dataset = MRIDataset(root_dir, ds_name, dist_type, index_list=test_index, sample_length=sample_length, threshold=threshold)
+        train_dataset = MRIDataset(root_dir, ds_name, dist_type, index_list=train_index, sample_length=sample_length)
+        test_dataset = MRIDataset(root_dir, ds_name, dist_type, index_list=test_index, sample_length=sample_length)
 
         train_loader = DataLoader(train_dataset, batch_size=batch_size, num_workers=num_workers, shuffle=True)
         test_loader = DataLoader(test_dataset, batch_size=batch_size, num_workers=num_workers, shuffle=True)

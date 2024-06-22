@@ -489,7 +489,7 @@ def channel_shuffle(x: Tensor, groups: int) -> Tensor:
 
     return x
 
-class SS_Conv_SSM(nn.Module):
+class Local_Global_Integration_Module(nn.Module):
     def __init__(
         self,
         hidden_dim: int = 0,
@@ -527,7 +527,7 @@ class SS_Conv_SSM(nn.Module):
         return output+input
 
 
-class VSSLayer(nn.Module):
+class Cascading_Process_Module(nn.Module):
     """ A basic Swin Transformer layer for one stage.
     Args:
         dim (int): Number of input channels.
@@ -557,7 +557,7 @@ class VSSLayer(nn.Module):
         self.use_checkpoint = use_checkpoint
 
         self.blocks = nn.ModuleList([
-            SS_Conv_SSM(
+            Local_Global_Integration_Module(
                 hidden_dim=dim,
                 drop_path=drop_path[i] if isinstance(drop_path, list) else drop_path,
                 norm_layer=norm_layer,
@@ -566,7 +566,7 @@ class VSSLayer(nn.Module):
             )
             for i in range(depth)])
         
-        if True: # is this really applied? Yes, but been overriden later in VSSM!
+        if True: # is this really applied? Yes, but been overriden later in Sequential_Feature_Extraction_Module!
             def _init_weights(module: nn.Module):
                 for name, p in module.named_parameters():
                     if name in ["out_proj.weight"]:
@@ -593,73 +593,7 @@ class VSSLayer(nn.Module):
         return x
     
 
-
-class VSSLayer_up(nn.Module):
-    """ A basic Swin Transformer layer for one stage.
-    Args:
-        dim (int): Number of input channels.
-        depth (int): Number of blocks.
-        drop (float, optional): Dropout rate. Default: 0.0
-        attn_drop (float, optional): Attention dropout rate. Default: 0.0
-        drop_path (float | tuple[float], optional): Stochastic depth rate. Default: 0.0
-        norm_layer (nn.Module, optional): Normalization layer. Default: nn.LayerNorm
-        downsample (nn.Module | None, optional): Downsample layer at the end of the layer. Default: None
-        use_checkpoint (bool): Whether to use checkpointing to save memory. Default: False.
-    """
-
-    def __init__(
-        self, 
-        dim, 
-        depth, 
-        attn_drop=0.,
-        drop_path=0., 
-        norm_layer=nn.LayerNorm, 
-        upsample=None, 
-        use_checkpoint=False, 
-        d_state=16,
-        **kwargs,
-    ):
-        super().__init__()
-        self.dim = dim
-        self.use_checkpoint = use_checkpoint
-
-        self.blocks = nn.ModuleList([
-            SS_Conv_SSM(
-                hidden_dim=dim,
-                drop_path=drop_path[i] if isinstance(drop_path, list) else drop_path,
-                norm_layer=norm_layer,
-                attn_drop_rate=attn_drop,
-                d_state=d_state,
-            )
-            for i in range(depth)])
-        
-        if True: # is this really applied? Yes, but been overriden later in VSSM!
-            def _init_weights(module: nn.Module):
-                for name, p in module.named_parameters():
-                    if name in ["out_proj.weight"]:
-                        p = p.clone().detach_() # fake init, just to keep the seed ....
-                        nn.init.kaiming_uniform_(p, a=math.sqrt(5))
-            self.apply(_init_weights)
-
-        if upsample is not None:
-            self.upsample = upsample(dim=dim, norm_layer=norm_layer)
-        else:
-            self.upsample = None
-
-
-    def forward(self, x):
-        if self.upsample is not None:
-            x = self.upsample(x)
-        for blk in self.blocks:
-            if self.use_checkpoint:
-                x = checkpoint.checkpoint(blk, x)
-            else:
-                x = blk(x)
-        return x
-    
-
-
-class VSSM(nn.Module):
+class Sequential_Feature_Extraction_Module(nn.Module):
     def __init__(self, patch_size=4, in_chans=3, num_classes=1000, depths=[2, 2, 4, 2], depths_decoder=[2, 9, 2, 2],
                  dims=[96,192,384,768], dims_decoder=[768, 384, 192, 96], d_state=16, drop_rate=0., attn_drop_rate=0., drop_path_rate=0.1,
                  norm_layer=nn.LayerNorm, patch_norm=True,
@@ -691,7 +625,7 @@ class VSSM(nn.Module):
 
         self.layers = nn.ModuleList()
         for i_layer in range(self.num_layers):
-            layer = VSSLayer(
+            layer = Cascading_Process_Module(
                 dim=dims[i_layer],
                 depth=depths[i_layer],
                 d_state=math.ceil(dims[0] / 6) if d_state is None else d_state, # 20240109
@@ -713,12 +647,13 @@ class VSSM(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+
     def _init_weights(self, m: nn.Module):
         """
-        out_proj.weight which is previously initilized in SS_Conv_SSM, would be cleared in nn.Linear
+        out_proj.weight which is previously initilized in Local_Global_Integration_Module, would be cleared in nn.Linear
         no fc.weight found in the any of the model parameters
         no nn.Embedding found in the any of the model parameters
-        so the thing is, SS_Conv_SSM initialization is useless
+        so the thing is, Local_Global_Integration_Module initialization is useless
         
         Conv2D is not intialized !!!
         """
@@ -760,30 +695,36 @@ class VSSM(nn.Module):
 class HSFNet(nn.Module):
     def __init__(self, sample_length, num_classes, last_dim):
         super(HSFNet, self).__init__()
-        self.mamba1 = VSSM(in_chans=sample_length, num_classes=last_dim)
-        self.mamba2 = VSSM(in_chans=sample_length, num_classes=last_dim // 2)
-        self.mamba3 = VSSM(in_chans=sample_length, num_classes=last_dim // 2)
+        self.sfem1 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim)
+        self.sfem2 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim // 2)
+        self.sfem3 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim // 2)
         self.linear1 = nn.Linear(last_dim + 2 * (last_dim // 2), last_dim)
         self.linear2 = nn.Linear(last_dim, num_classes)
 
     def forward(self, x1, x2, x3):
-        x1 = self.mamba1(x1)
-        x2 = self.mamba2(x2)
-        x3 = self.mamba3(x3)
+        x1 = self.sfem1(x1)
+        x2 = self.sfem2(x2)
+        x3 = self.sfem3(x3)
         x = torch.cat((x1, x2, x3), dim=1)
         x = F.relu(self.linear1(x))
         x = self.linear2(x)
         return x
     
+    def get_sfem_outputs(self, x1, x2, x3):
+        x1 = self.sfem1(x1)
+        x2 = self.sfem2(x2)
+        x3 = self.sfem3(x3)
+        return x1, x2, x3
+
 
 class HSFNet_spa(nn.Module):
     def __init__(self, sample_length, num_classes, last_dim):
         super(HSFNet_spa, self).__init__()
-        self.mamba = VSSM(in_chans=sample_length, num_classes=last_dim)
+        self.sfem1 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim)
         self.linear = nn.Linear(last_dim, num_classes)
 
     def forward(self, x1, x2, x3):
-        x1 = self.mamba(x1)
+        x1 = self.sfem1(x1)
         x1 = self.linear(x1)
         return x1
     
@@ -791,14 +732,14 @@ class HSFNet_spa(nn.Module):
 class HSFNet_freq(nn.Module):
     def __init__(self, sample_length, num_classes, last_dim):
         super(HSFNet_freq, self).__init__()
-        self.mamba2 = VSSM(in_chans=sample_length, num_classes=last_dim // 2)
-        self.mamba3 = VSSM(in_chans=sample_length, num_classes=last_dim // 2)
+        self.sfem2 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim // 2)
+        self.sfem3 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim // 2)
         self.linear1 = nn.Linear(2 * (last_dim // 2), last_dim)
         self.linear2 = nn.Linear(last_dim, num_classes)
 
     def forward(self, x1, x2, x3):
-        x2 = self.mamba2(x2)
-        x3 = self.mamba3(x3)
+        x2 = self.sfem2(x2)
+        x3 = self.sfem3(x3)
         x = torch.cat((x2, x3), dim=1)
         x = F.relu(self.linear1(x))
         x = self.linear2(x)
@@ -808,16 +749,16 @@ class HSFNet_freq(nn.Module):
 class HSFNet_wo_real(nn.Module):
     def __init__(self, sample_length, num_classes, last_dim):
         super(HSFNet_wo_real, self).__init__()
-        self.mamba1 = VSSM(in_chans=sample_length, num_classes=last_dim)
-        # self.mamba2 = VSSM(in_chans=sample_length, num_classes=last_dim // 2)
-        self.mamba3 = VSSM(in_chans=sample_length, num_classes=last_dim // 2)
+        self.sfem1 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim)
+        # self.sfem2 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim // 2)
+        self.sfem3 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim // 2)
         self.linear1 = nn.Linear(last_dim + (last_dim // 2), last_dim)
         self.linear2 = nn.Linear(last_dim, num_classes)
 
     def forward(self, x1, x2, x3):
-        x1 = self.mamba1(x1)
-        # x2 = self.mamba2(x2)
-        x3 = self.mamba3(x3)
+        x1 = self.sfem1(x1)
+        # x2 = self.sfem2(x2)
+        x3 = self.sfem3(x3)
         x = torch.cat((x1, x3), dim=1)
         x = F.relu(self.linear1(x))
         x = self.linear2(x)
@@ -827,16 +768,16 @@ class HSFNet_wo_real(nn.Module):
 class HSFNet_wo_imag(nn.Module):
     def __init__(self, sample_length, num_classes, last_dim):
         super(HSFNet_wo_imag, self).__init__()
-        self.mamba1 = VSSM(in_chans=sample_length, num_classes=last_dim)
-        self.mamba2 = VSSM(in_chans=sample_length, num_classes=last_dim // 2)
-        # self.mamba3 = VSSM(in_chans=sample_length, num_classes=last_dim // 2)
+        self.sfem1 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim)
+        self.sfem2 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim // 2)
+        # self.sfem3 = Sequential_Feature_Extraction_Module(in_chans=sample_length, num_classes=last_dim // 2)
         self.linear1 = nn.Linear(last_dim + (last_dim // 2), last_dim)
         self.linear2 = nn.Linear(last_dim, num_classes)
 
     def forward(self, x1, x2, x3):
-        x1 = self.mamba1(x1)
-        x2 = self.mamba2(x2)
-        # x3 = self.mamba3(x3)
+        x1 = self.sfem1(x1)
+        x2 = self.sfem2(x2)
+        # x3 = self.sfem3(x3)
         x = torch.cat((x1, x2), dim=1)
         x = F.relu(self.linear1(x))
         x = self.linear2(x)
