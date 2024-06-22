@@ -98,9 +98,9 @@ python download_abide_preproc.py -d reho -p niak -s nofilt_noglobal -o ./ABIDE
 
 
 
-## 3. Distortion generation
+## 3. Benchmark dataset construction
 
-Generate five types of distortion and four levels for each with [TorchIO](https://torchio.readthedocs.io) library. The parameters for distortion are:
+To establish the large-scale benchmark dataset, we generate five types of distortion and four levels for each with [TorchIO](https://torchio.readthedocs.io) library. The parameters for distortion are:
 
 | Distortion type     | Parameter        | Level 1      | Level 2      | Level 3      | Level 4      |
 |---------------------|------------------|--------------|--------------|--------------|--------------|
